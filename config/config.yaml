@@ -1,0 +1,143 @@
+# =============================================================================
+# Dengue Forecasting — central configuration
+# -----------------------------------------------------------------------------
+# Every tunable knob of the pipeline lives here so that the Python code stays
+# free of magic numbers. Edit this file (not the code) to change paths, the
+# split ratio, lag windows, tuning grids, plot styling, etc.
+# =============================================================================
+
+project:
+  name: "STTL Dengue Forecasting"
+  random_seed: 42            # single global seed -> fully reproducible runs
+
+# --- Filesystem layout -------------------------------------------------------
+paths:
+  dataset_dir: "dataset"
+  features_train: "dataset/dengue_features_train.csv"
+  labels_train:   "dataset/dengue_labels_train.csv"
+  features_test:  "dataset/dengue_features_test.csv"
+  output_dir:     "outputs"
+  figures_dir:    "outputs/figures"
+  models_dir:     "outputs/models"
+  reports_dir:    "outputs/reports"
+  predictions_dir: "outputs/predictions"
+
+# --- Data / modeling design --------------------------------------------------
+data:
+  cities: ["sj", "iq"]                     # modeled independently
+  date_col: "week_start_date"
+  target: "total_cases"
+  key_cols: ["city", "year", "weekofyear", "week_start_date"]
+  # reanalysis_sat_precip_amt_mm is byte-identical to precipitation_amt_mm
+  # (a known redundancy in the DengAI dataset) -> dropped in cleaning.
+  drop_redundant: ["reanalysis_sat_precip_amt_mm"]
+
+preprocessing:
+  # Past-only imputation: forward-fill (carry last valid obs forward), then a
+  # back-fill pass only for leading gaps that have no past to draw from.
+  impute_method: "ffill_bfill"
+  scaler: "standard"                       # StandardScaler, fit on TRAIN only
+
+feature_engineering:
+  lag_weeks: [1, 2, 3, 4]                  # biological delay weather -> cases
+  rolling_windows: [4, 8, 12]             # trailing means/std denoise weather
+  add_seasonality: true                    # cyclic sin/cos of weekofyear + month
+  target_transform: "log1p"                # train on log1p(cases), invert expm1
+  # --- Autoregressive (nowcast) mode -------------------------------------
+  # OFF by default: the pipeline answers the pure weather-only multi-week
+  # FORECAST question (DengAI-legit; no case history used).
+  # When ON, past weekly case counts are added as features, turning the task
+  # into a short-horizon 1-week-ahead NOWCAST. This dramatically lowers RMSE
+  # (cases are highly autocorrelated) but ASSUMES recent case counts are known
+  # at prediction time; the test forecast is then produced recursively.
+  autoregressive: false
+  autoregressive_case_lags: [1, 2, 3, 4]   # lags of total_cases used as features
+  autoregressive_case_rolling: [4]         # trailing rolling-mean window of cases
+
+split:
+  # Temporal hold-out: train on the earliest `train_frac`, test on the most
+  # recent (1 - train_frac). No shuffling — respects time order.
+  train_frac: 0.75
+
+feature_selection:
+  enabled: true
+  method: "mutual_info"                    # SelectKBest(mutual_info_regression)
+  k: 30                                    # top-k features per city
+
+# --- Cross-validation used inside hyperparameter tuning ----------------------
+cv:
+  strategy: "timeseries"                   # TimeSeriesSplit (no future leakage)
+  n_splits: 4
+  scoring: "neg_mean_absolute_error"       # used when tune_objective == "mae"
+  # Objective the tree-model search minimizes during tuning:
+  #   "mae"  -> negative MAE on the (log) target — the official DengAI metric.
+  #   "rmse" -> RMSE on the ORIGINAL case scale (predictions are inverse-
+  #             transformed inside CV before scoring). Gives a small RMSE win
+  #             in weather-only mode but can hurt autoregressive mode.
+  tune_objective: "mae"
+
+# --- Hyperparameter tuning ---------------------------------------------------
+# Only tree/ensemble models are tuned. Linear models (Linear/Ridge/Lasso/ENet)
+# are intentionally left untuned per the project spec.
+tuning:
+  n_iter: 40                               # RandomizedSearchCV samples
+  decision_tree:
+    search: "grid"                         # small space -> exhaustive grid
+    param_grid:
+      max_depth: [3, 5, 7, 10, 15, null]
+      min_samples_leaf: [1, 5, 10, 20]
+      min_samples_split: [2, 10, 20]
+  random_forest:
+    search: "random"                       # large space -> randomized search
+    param_distributions:
+      n_estimators: [200, 300, 500, 800]
+      max_depth: [5, 10, 15, 20, null]
+      min_samples_leaf: [1, 2, 5, 10]
+      max_features: ["sqrt", "log2", 0.5, 1.0]
+  xgboost:
+    search: "random"
+    param_distributions:
+      n_estimators: [200, 400, 600, 800]
+      max_depth: [3, 4, 5, 6, 8]
+      learning_rate: [0.01, 0.03, 0.05, 0.1]
+      subsample: [0.6, 0.8, 1.0]
+      colsample_bytree: [0.6, 0.8, 1.0]
+      reg_alpha: [0.0, 0.1, 1.0]
+      reg_lambda: [0.5, 1.0, 2.0]
+  lightgbm:
+    search: "random"
+    param_distributions:
+      n_estimators: [200, 400, 600, 800]
+      num_leaves: [15, 31, 63, 127]
+      max_depth: [-1, 4, 6, 8, 12]
+      learning_rate: [0.01, 0.03, 0.05, 0.1]
+      subsample: [0.6, 0.8, 1.0]
+      colsample_bytree: [0.6, 0.8, 1.0]
+      min_child_samples: [5, 10, 20, 30]
+
+# --- Fixed hyperparameters for the (untuned) linear family -------------------
+linear_models:
+  ridge:
+    alpha: 1.0
+  lasso:
+    alpha: 0.01
+    max_iter: 50000
+  elastic_net:
+    alpha: 0.01
+    l1_ratio: 0.5
+    max_iter: 50000
+
+# --- Plot styling ------------------------------------------------------------
+viz:
+  dpi: 300
+  style: "seaborn-v0_8-whitegrid"
+  palette: "deep"
+  figsize_default: [11, 6]
+  # City-consistent colors used everywhere
+  colors:
+    actual: "#1f2a44"       # deep navy
+    predicted: "#e2711d"    # warm orange
+    sj: "#2a6f97"           # blue
+    iq: "#c9184a"           # crimson
+    good: "#2a9d8f"
+    bad: "#e63946"

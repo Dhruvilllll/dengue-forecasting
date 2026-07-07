@@ -1,0 +1,84 @@
+11:15:33 | INFO    | dengue_forecast.data_loader | Reading D:\Shit\STTL Project\dataset\dengue_features_train.csv
+11:15:33 | INFO    | dengue_forecast.data_loader | Reading D:\Shit\STTL Project\dataset\dengue_labels_train.csv
+11:15:33 | INFO    | dengue_forecast.data_loader | Reading D:\Shit\STTL Project\dataset\dengue_features_test.csv
+11:15:33 | INFO    | dengue_forecast.data_loader | Merged training frame: 1456 rows, 25 cols (target present: True)
+11:15:33 | INFO    | dengue_forecast.data_loader | City 'sj': train=936 weeks (1990-04-30 -> 2008-04-22), test=260 weeks
+11:15:33 | INFO    | dengue_forecast.data_loader | City 'iq': train=520 weeks (2000-07-01 -> 2010-06-25), test=156 weeks
+11:15:33 | INFO    | dengue_forecast.tuning | Tuning objective: neg_mean_absolute_error
+11:15:33 | INFO    | nowcast_demo | ===== SJ =====
+11:15:33 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:15:33 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 371 (worst: ndvi_ne=191, ndvi_nw=49, ndvi_se=19)
+11:15:33 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:15:33 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:15:33 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 86 (worst: ndvi_ne=43, ndvi_nw=11, reanalysis_precip_amt_kg_per_m2=2)
+11:15:33 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:15:33 | INFO    | dengue_forecast.feature_engineering | [sj] dropped 6 leading train weeks with undefined lags (936 -> 930)
+11:15:33 | INFO    | dengue_forecast.feature_engineering | [sj] engineered 213 features (train=930, test=260)
+11:15:34 | INFO    | dengue_forecast.feature_engineering | Selected 30/213 features by mutual information
+11:15:34 | INFO    | dengue_forecast.tuning | [random_forest] RandomizedSearchCV: 40 of a large space
+11:16:21 | INFO    | dengue_forecast.tuning | [random_forest] best CV MAE=0.7301 | params={'n_estimators': 500, 'min_samples_leaf': 1, 'max_features': 'log2', 'max_depth': 10}
+11:16:21 | INFO    | nowcast_demo |   Climate only     Random Forest  MAE=17.21 RMSE=27.29 R2=0.089
+11:16:21 | INFO    | dengue_forecast.tuning | [xgboost] RandomizedSearchCV: 40 of a large space
+11:17:20 | INFO    | dengue_forecast.tuning | [xgboost] best CV MAE=0.7154 | params={'subsample': 0.6, 'reg_lambda': 1.0, 'reg_alpha': 0.0, 'n_estimators': 200, 'max_depth': 8, 'learning_rate': 0.03, 'colsample_bytree': 0.6}
+11:17:20 | INFO    | nowcast_demo |   Climate only     XGBoost        MAE=17.76 RMSE=27.76 R2=0.057
+11:17:20 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:17:20 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 371 (worst: ndvi_ne=191, ndvi_nw=49, ndvi_se=19)
+11:17:20 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:17:20 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:17:20 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 86 (worst: ndvi_ne=43, ndvi_nw=11, reanalysis_precip_amt_kg_per_m2=2)
+11:17:20 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:17:20 | INFO    | dengue_forecast.feature_engineering | [sj] dropped 6 leading train weeks with undefined lags (936 -> 930)
+11:17:20 | INFO    | dengue_forecast.feature_engineering | [sj] autoregressive ON: +5 case features, dropped 4 more leading weeks (930 -> 926)
+11:17:20 | INFO    | dengue_forecast.feature_engineering | [sj] engineered 218 features (train=926, test=260)
+11:17:21 | INFO    | dengue_forecast.feature_engineering | Selected 30/218 features by mutual information
+11:17:21 | INFO    | dengue_forecast.tuning | [random_forest] RandomizedSearchCV: 40 of a large space
+11:18:08 | INFO    | dengue_forecast.tuning | [random_forest] best CV MAE=0.3272 | params={'n_estimators': 300, 'min_samples_leaf': 1, 'max_features': 0.5, 'max_depth': 5}
+11:18:08 | INFO    | nowcast_demo |   Climate + Cases  Random Forest  MAE=6.94 RMSE=11.82 R2=0.829
+11:18:08 | INFO    | dengue_forecast.tuning | [xgboost] RandomizedSearchCV: 40 of a large space
+11:19:03 | INFO    | dengue_forecast.tuning | [xgboost] best CV MAE=0.3411 | params={'subsample': 0.6, 'reg_lambda': 0.5, 'reg_alpha': 0.0, 'n_estimators': 800, 'max_depth': 4, 'learning_rate': 0.01, 'colsample_bytree': 0.6}
+11:19:03 | INFO    | nowcast_demo |   Climate + Cases  XGBoost        MAE=6.71 RMSE=11.23 R2=0.846
+11:19:03 | INFO    | nowcast_demo | ===== IQ =====
+11:19:03 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:19:03 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 164 (worst: station_diur_temp_rng_c=37, station_avg_temp_c=37, station_precip_mm=16)
+11:19:03 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:19:03 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:19:03 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 31 (worst: station_avg_temp_c=10, station_diur_temp_rng_c=10, station_min_temp_c=7)
+11:19:03 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:19:04 | INFO    | dengue_forecast.feature_engineering | [iq] dropped 6 leading train weeks with undefined lags (520 -> 514)
+11:19:04 | INFO    | dengue_forecast.feature_engineering | [iq] engineered 213 features (train=514, test=156)
+11:19:04 | INFO    | dengue_forecast.feature_engineering | Selected 30/213 features by mutual information
+11:19:04 | INFO    | dengue_forecast.tuning | [random_forest] RandomizedSearchCV: 40 of a large space
+11:19:42 | INFO    | dengue_forecast.tuning | [random_forest] best CV MAE=0.8061 | params={'n_estimators': 800, 'min_samples_leaf': 1, 'max_features': 'log2', 'max_depth': 20}
+11:19:42 | INFO    | nowcast_demo |   Climate only     Random Forest  MAE=7.62 RMSE=13.23 R2=-0.120
+11:19:42 | INFO    | dengue_forecast.tuning | [xgboost] RandomizedSearchCV: 40 of a large space
+11:20:17 | INFO    | dengue_forecast.tuning | [xgboost] best CV MAE=0.8172 | params={'subsample': 0.8, 'reg_lambda': 1.0, 'reg_alpha': 0.1, 'n_estimators': 200, 'max_depth': 6, 'learning_rate': 0.1, 'colsample_bytree': 0.8}
+11:20:17 | INFO    | nowcast_demo |   Climate only     XGBoost        MAE=7.42 RMSE=12.46 R2=0.007
+11:20:17 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:20:17 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 164 (worst: station_diur_temp_rng_c=37, station_avg_temp_c=37, station_precip_mm=16)
+11:20:17 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:20:17 | INFO    | dengue_forecast.preprocessing | Dropped redundant columns: ['reanalysis_sat_precip_amt_mm']
+11:20:17 | INFO    | dengue_forecast.preprocessing | Missing feature cells before impute: 31 (worst: station_avg_temp_c=10, station_diur_temp_rng_c=10, station_min_temp_c=7)
+11:20:17 | INFO    | dengue_forecast.preprocessing | Missing feature cells after impute: 0
+11:20:17 | INFO    | dengue_forecast.feature_engineering | [iq] dropped 6 leading train weeks with undefined lags (520 -> 514)
+11:20:17 | INFO    | dengue_forecast.feature_engineering | [iq] autoregressive ON: +5 case features, dropped 4 more leading weeks (514 -> 510)
+11:20:17 | INFO    | dengue_forecast.feature_engineering | [iq] engineered 218 features (train=510, test=156)
+11:20:18 | INFO    | dengue_forecast.feature_engineering | Selected 30/218 features by mutual information
+11:20:18 | INFO    | dengue_forecast.tuning | [random_forest] RandomizedSearchCV: 40 of a large space
+11:20:56 | INFO    | dengue_forecast.tuning | [random_forest] best CV MAE=0.5784 | params={'n_estimators': 500, 'min_samples_leaf': 5, 'max_features': 1.0, 'max_depth': 15}
+11:20:56 | INFO    | nowcast_demo |   Climate + Cases  Random Forest  MAE=5.40 RMSE=8.77 R2=0.449
+11:20:56 | INFO    | dengue_forecast.tuning | [xgboost] RandomizedSearchCV: 40 of a large space
+11:21:25 | INFO    | dengue_forecast.tuning | [xgboost] best CV MAE=0.6080 | params={'subsample': 1.0, 'reg_lambda': 1.0, 'reg_alpha': 1.0, 'n_estimators': 800, 'max_depth': 3, 'learning_rate': 0.05, 'colsample_bytree': 0.6}
+11:21:25 | INFO    | nowcast_demo |   Climate + Cases  XGBoost        MAE=5.86 RMSE=9.29 R2=0.381
+
+====================================================================
+AUTOREGRESSIVE NOWCAST — climate-only vs climate+cases (hold-out RMSE)
+====================================================================
+Signal              Climate + Cases  Climate only  Improvement  % cut
+City Model                                                           
+iq   Random Forest             8.77         13.23         4.47  33.76
+     XGBoost                   9.29         12.46         3.16  25.38
+sj   Random Forest            11.82         27.29        15.47  56.67
+     XGBoost                  11.23         27.76        16.53  59.56
+====================================================================
+Average RMSE:  climate-only 20.2  ->  climate+cases 10.3   (49% lower error)
+Predictions + comparison saved to: D:\Shit\STTL Project\outputs\nowcast_demo

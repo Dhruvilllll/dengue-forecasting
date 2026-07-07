@@ -1,0 +1,12 @@
+{
+  "best_by_city": {
+    "sj": "Elastic Net (L1+L2)",
+    "iq": "XGBoost"
+  },
+  "combined_best": "Random Forest",
+  "n_models": 8,
+  "cities": [
+    "sj",
+    "iq"
+  ]
+}

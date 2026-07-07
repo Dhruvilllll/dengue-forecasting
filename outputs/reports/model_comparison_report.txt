@@ -1,0 +1,47 @@
+==========================================================================
+DENGUE FORECASTING — MODEL COMPARISON REPORT
+==========================================================================
+
+Metrics: MAE (primary), RMSE, R^2 — evaluated on the temporal
+hold-out (most-recent 25% of each city's weeks).
+
+--- City: IQ ----------------------------------------------------------------
+Rank Model                          MAE      RMSE        R2   Tuned
+-------------------------------------------------------------------
+1    XGBoost                      7.421    12.456     0.007    True
+2    Random Forest                7.622    13.234    -0.120    True
+3    LightGBM                     7.636    13.019    -0.085    True
+4    Decision Tree                7.905    12.381     0.019    True
+5    Linear Regression            8.020    13.206    -0.116   False
+6    Lasso (L1)                   8.022    13.351    -0.140   False
+7    Elastic Net (L1+L2)          8.058    13.318    -0.135   False
+8    Ridge (L2)                   8.099    13.245    -0.122   False
+  -> Best for IQ: XGBoost (MAE=7.421)
+
+--- City: SJ ----------------------------------------------------------------
+Rank Model                          MAE      RMSE        R2   Tuned
+-------------------------------------------------------------------
+1    Elastic Net (L1+L2)         16.992    25.977     0.174   False
+2    Lasso (L1)                  17.085    25.969     0.175   False
+3    Random Forest               17.209    27.289     0.089    True
+4    XGBoost                     17.760    27.761     0.057    True
+5    Ridge (L2)                  18.097    27.499     0.075   False
+6    Linear Regression           18.376    28.092     0.034   False
+7    LightGBM                    18.759    27.427     0.079    True
+8    Decision Tree               18.954    31.332    -0.201    True
+  -> Best for SJ: Elastic Net (L1+L2) (MAE=16.992)
+
+--- Combined (both cities pooled, DengAI-style) --------------------------
+Rank Model                          MAE      RMSE        R2
+-----------------------------------------------------------
+1    Random Forest               13.793    23.275     0.122
+2    Elastic Net (L1+L2)         13.808    22.306     0.194
+3    Lasso (L1)                  13.855    22.306     0.194
+4    XGBoost                     14.076    23.480     0.106
+5    Ridge (L2)                  14.534    23.436     0.110
+6    Linear Regression           14.685    23.876     0.076
+7    LightGBM                    14.795    23.337     0.117
+8    Decision Tree               15.016    26.201    -0.113
+
+Overall best (combined MAE): Random Forest (MAE=13.793)
+==========================================================================

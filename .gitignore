@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Claude Code local settings
+.claude/
+
+# Generated model binaries and run logs (regenerate via scripts/run_pipeline.py).
+# Figures, reports and predictions under outputs/ are kept as deliverables.
+outputs/models/
+outputs/reports/last_run.log
+outputs_autoregressive/models/
+outputs_autoregressive/reports/last_run.log
+
+# Large binary report (26 MB) — figures live under outputs/figures/ instead.
+PROJECT_FIGURE_REPORT.docx

@@ -1,0 +1,12 @@
+{
+  "best_by_city": {
+    "sj": "LightGBM",
+    "iq": "Decision Tree"
+  },
+  "combined_best": "LightGBM",
+  "n_models": 8,
+  "cities": [
+    "sj",
+    "iq"
+  ]
+}
