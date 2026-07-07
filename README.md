@@ -211,3 +211,9 @@ in feature selection (MI estimator) and tuning (`RandomizedSearchCV`) is seeded.
 4. **Autoregressive submission is a nowcast**, forecast recursively (error
    compounds over the horizon), so it is not a DengAI-valid multi-week entry; the
    weather-only `outputs/` is the competition-legitimate deliverable.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE).
